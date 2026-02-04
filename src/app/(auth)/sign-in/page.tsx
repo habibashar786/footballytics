@@ -1,29 +1,17 @@
-import { SignIn } from "@clerk/nextjs";
-
 export default function SignInPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black">
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-20" />
-      <div className="relative z-10">
-        <SignIn 
-          appearance={{
-            elements: {
-              rootBox: "mx-auto",
-              card: "bg-white/10 backdrop-blur-xl border border-white/10",
-              headerTitle: "text-white",
-              headerSubtitle: "text-gray-400",
-              socialButtonsBlockButton: "bg-white/5 border-white/10 hover:bg-white/10",
-              socialButtonsBlockButtonText: "text-white",
-              dividerLine: "bg-white/10",
-              dividerText: "text-gray-400",
-              formFieldLabel: "text-gray-300",
-              formFieldInput: "bg-white/5 border-white/10 text-white",
-              footerActionLink: "text-amber-400 hover:text-amber-300",
-              identityPreviewText: "text-white",
-              identityPreviewEditButton: "text-amber-400",
-            },
-          }}
-        />
+      <div className="glass-card p-8 max-w-md w-full text-center">
+        <h1 className="text-2xl font-bold mb-4">Sign In</h1>
+        <p className="text-muted-foreground mb-6">
+          Authentication coming soon. For now, enjoy the platform!
+        </p>
+        <a 
+          href="/"
+          className="inline-block px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-semibold rounded-lg hover:opacity-90 transition"
+        >
+          Go to Dashboard
+        </a>
       </div>
     </div>
   );
