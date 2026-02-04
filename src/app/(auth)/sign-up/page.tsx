@@ -18,7 +18,7 @@ export default function SignUpPage() {
               dividerText: "text-gray-400",
               formFieldLabel: "text-gray-300",
               formFieldInput: "bg-white/5 border-white/10 text-white",
-              footerActionLink: "text-gold-400 hover:text-gold-300",
+              footerActionLink: "text-amber-400 hover:text-amber-300",
             },
           }}
         />

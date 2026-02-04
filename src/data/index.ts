@@ -1,8 +1,6 @@
 /**
  * FOOTBALLYTICS - CENTRAL DATA EXPORT
  * ====================================
- * 
- * Re-exports all data modules for easy importing
  */
 
 // League & Club Data
@@ -31,9 +29,6 @@ export {
   getLeagueHistory,
   getClubHistory,
   getMarketTrend,
-  type HistoricalDataPoint,
-  type LeagueHistory,
-  type ClubHistory,
 } from "./historical";
 
 // Fan, Media & Sponsorship Data
@@ -48,18 +43,9 @@ export {
   getClubSponsorships,
   getLeagueMediaRights,
   getTotalSponsorshipValue,
-  type SocialMediaMetrics,
-  type MediaRightsDeal,
-  type Sponsorship,
 } from "./fan-media-sponsorship";
 
-// Types re-export
-export type { League, Club, Player, FanSegment, Tournament, KPI } from "@/types";
-
-// =============================================================================
-// HELPER FUNCTIONS
-// =============================================================================
-
+// Types
 import { leagues, clubs } from "./leagues-clubs";
 import { players } from "./players";
 import { fanSegments } from "./fan-media-sponsorship";
@@ -128,31 +114,12 @@ export const kpis = [
     category: "market",
     trend: "up" as const,
   },
-  {
-    id: "total-players",
-    name: "Players Tracked",
-    value: players.length,
-    previousValue: players.length - 5,
-    unit: "number",
-    category: "data",
-    trend: "up" as const,
-  },
-  {
-    id: "total-leagues",
-    name: "Leagues Covered",
-    value: leagues.length,
-    previousValue: leagues.length - 2,
-    unit: "number",
-    category: "data",
-    trend: "up" as const,
-  },
 ];
 
-// =============================================================================
-// TOURNAMENTS
-// =============================================================================
-
-export const tournaments: Tournament[] = [
+/**
+ * Tournaments
+ */
+export const tournaments = [
   {
     id: "world-cup-2026",
     name: "FIFA World Cup 2026",
@@ -176,41 +143,5 @@ export const tournaments: Tournament[] = [
     prizePool: 2_500_000_000,
     economicImpact: 4_200_000_000,
     status: "active",
-  },
-  {
-    id: "afcon-2025",
-    name: "Africa Cup of Nations 2025",
-    type: "international",
-    startDate: "2025-12-21",
-    endDate: "2026-01-18",
-    location: "Morocco",
-    teams: 24,
-    prizePool: 40_000_000,
-    economicImpact: 500_000_000,
-    status: "upcoming",
-  },
-  {
-    id: "asian-cup-2027",
-    name: "AFC Asian Cup 2027",
-    type: "international",
-    startDate: "2027-01-01",
-    endDate: "2027-02-01",
-    location: "Saudi Arabia",
-    teams: 24,
-    prizePool: 50_000_000,
-    economicImpact: 800_000_000,
-    status: "upcoming",
-  },
-  {
-    id: "arab-cup-2025",
-    name: "FIFA Arab Cup 2025",
-    type: "international",
-    startDate: "2025-12-01",
-    endDate: "2025-12-18",
-    location: "Qatar",
-    teams: 16,
-    prizePool: 25_000_000,
-    economicImpact: 200_000_000,
-    status: "upcoming",
   },
 ];

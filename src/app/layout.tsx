@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import "./globals.css";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
@@ -26,36 +24,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      appearance={{
-        baseTheme: dark,
-        variables: {
-          colorPrimary: "#FBBF24",
-          colorBackground: "#0a0a0a",
-          colorText: "#ffffff",
-          colorTextSecondary: "#a1a1aa",
-        },
-      }}
-    >
-      <html lang="en" className="dark">
-        <body className={`${inter.className} bg-black text-white antialiased`}>
-          <div className="flex h-screen overflow-hidden">
-            {/* Sidebar */}
-            <Sidebar />
+    <html lang="en" className="dark">
+      <body className={`${inter.className} bg-black text-white antialiased`}>
+        <div className="flex h-screen overflow-hidden">
+          {/* Sidebar */}
+          <Sidebar />
+          
+          {/* Main Content */}
+          <div className="flex-1 flex flex-col overflow-hidden lg:ml-64">
+            {/* Header */}
+            <Header />
             
-            {/* Main Content */}
-            <div className="flex-1 flex flex-col overflow-hidden">
-              {/* Header */}
-              <Header />
-              
-              {/* Page Content */}
-              <main className="flex-1 overflow-auto p-6 bg-gradient-to-br from-black via-gray-900/50 to-black">
-                {children}
-              </main>
-            </div>
+            {/* Page Content */}
+            <main className="flex-1 overflow-auto p-6 bg-gradient-to-br from-black via-gray-900/50 to-black">
+              {children}
+            </main>
           </div>
-        </body>
-      </html>
-    </ClerkProvider>
+        </div>
+      </body>
+    </html>
   );
 }
