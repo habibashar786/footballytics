@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
-import { orchestrator, AgentTask } from "@/agents";
+import { orchestrator } from "@/agents";
 
-export const runtime = "edge";
-export const maxDuration = 30;
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { query, type = "general" } = body;
+    const { query } = body;
 
     if (!query) {
       return NextResponse.json(
@@ -16,51 +15,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // Determine which agents to use based on query type
-    const tasks: AgentTask[] = [];
-    const queryLower = query.toLowerCase();
-
-    // Always include data agent
-    if (queryLower.includes("player")) {
-      tasks.push({ id: "data-players", type: "data", query: "players" });
-      tasks.push({ id: "rank-players", type: "ranking", query: "player:value" });
-    }
-    
-    if (queryLower.includes("club")) {
-      tasks.push({ id: "data-clubs", type: "data", query: "clubs" });
-      tasks.push({ id: "rank-clubs", type: "ranking", query: "club:value" });
-    }
-
-    if (queryLower.includes("market") || queryLower.includes("value")) {
-      tasks.push({ id: "analytics-market", type: "analytics", query: "market" });
-    }
-
-    // Always include insights
-    tasks.push({ id: "insights", type: "insights", query: "market" });
-
-    // If no specific tasks, add general ones
-    if (tasks.length === 1) {
-      tasks.unshift({ id: "data-players", type: "data", query: "players" });
-      tasks.unshift({ id: "analytics-market", type: "analytics", query: "market" });
-    }
-
-    // Execute agents in parallel
-    const result = await orchestrator.executeParallel(tasks);
+    // Execute orchestrator
+    const result = await orchestrator.runQuery(query);
 
     return NextResponse.json({
       success: true,
-      taskId: result.taskId,
-      results: result.results.map(r => ({
-        agent: r.agent,
-        status: r.status,
-        duration: r.duration,
-        cached: r.cached,
-        dataPreview: Array.isArray(r.data) 
-          ? `${(r.data as any[]).length} items`
-          : typeof r.data,
+      response: result.response,
+      agents: result.agents.map(a => ({
+        agent: a.agent,
+        status: a.status,
+        duration: a.duration,
+        cached: a.cached,
       })),
-      totalDuration: result.totalDuration,
-      synthesizedResponse: result.synthesizedResponse,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
@@ -70,4 +36,10 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+}
+
+export async function GET() {
+  return NextResponse.json({
+    message: "Use POST method with query parameter",
+  });
 }

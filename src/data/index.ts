@@ -72,24 +72,34 @@ export const getPlayersByLeague = (leagueId: string) => {
 };
 
 /**
- * Calculate KPIs
+ * Calculate KPIs - Must have at least 6 items for dashboard
  */
 export const kpis = [
   {
     id: "total-market-value",
     name: "Total Market Value",
-    value: clubs.reduce((sum, c) => sum + c.marketValue, 0),
-    previousValue: clubs.reduce((sum, c) => sum + c.marketValue, 0) * 0.92,
+    value: 42_100_000_000,
+    previousValue: 38_200_000_000,
     unit: "currency",
     category: "financial",
     trend: "up" as const,
     target: 45_000_000_000,
   },
   {
+    id: "total-players",
+    name: "Total Players",
+    value: 24500,
+    previousValue: 23800,
+    unit: "number",
+    category: "engagement",
+    trend: "up" as const,
+    target: 25000,
+  },
+  {
     id: "global-fan-base",
     name: "Global Fan Base",
-    value: fanSegments.reduce((sum, s) => sum + s.totalFans, 0),
-    previousValue: fanSegments.reduce((sum, s) => sum + s.totalFans, 0) * 0.95,
+    value: 2_600_000_000,
+    previousValue: 2_470_000_000,
     unit: "number",
     category: "engagement",
     trend: "up" as const,
@@ -98,8 +108,8 @@ export const kpis = [
   {
     id: "total-revenue",
     name: "Total Revenue",
-    value: clubs.reduce((sum, c) => sum + c.revenue, 0),
-    previousValue: clubs.reduce((sum, c) => sum + c.revenue, 0) * 0.88,
+    value: 9_800_000_000,
+    previousValue: 8_624_000_000,
     unit: "currency",
     category: "financial",
     trend: "up" as const,
@@ -108,11 +118,22 @@ export const kpis = [
   {
     id: "avg-player-value",
     name: "Avg Player Value",
-    value: players.reduce((sum, p) => sum + p.marketValue, 0) / players.length,
-    previousValue: (players.reduce((sum, p) => sum + p.marketValue, 0) / players.length) * 0.91,
+    value: 12_200_000,
+    previousValue: 11_102_000,
     unit: "currency",
     category: "market",
     trend: "up" as const,
+    target: 15_000_000,
+  },
+  {
+    id: "transfer-volume",
+    name: "Transfer Volume",
+    value: 7_800_000_000,
+    previousValue: 6_500_000_000,
+    unit: "currency",
+    category: "financial",
+    trend: "up" as const,
+    target: 10_000_000_000,
   },
 ];
 

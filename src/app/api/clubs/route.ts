@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
-import { getOrSetCache } from "@/lib/cache";
-import { clubs, getTopClubsByValue } from "@/data";
+import { clubs } from "@/data";
 
-export const runtime = "edge";
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -12,42 +10,36 @@ export async function GET(request: Request) {
   const sortBy = searchParams.get("sortBy") || "marketValue";
 
   try {
-    const cacheKey = `list:${limit}:${league}:${sortBy}`;
-    
-    const { data, cached, duration } = await getOrSetCache(
-      "clubs",
-      cacheKey,
-      async () => {
-        let result = [...clubs];
+    const startTime = Date.now();
+    let result = [...clubs];
 
-        // Apply filters
-        if (league) {
-          result = result.filter(c => c.leagueId === league);
-        }
+    // Apply filters
+    if (league) {
+      result = result.filter(c => c.leagueId === league);
+    }
 
-        // Sort
-        result.sort((a, b) => {
-          switch (sortBy) {
-            case "revenue":
-              return b.revenue - a.revenue;
-            case "trophies":
-              return b.trophies - a.trophies;
-            case "brandIndex":
-              return b.brandIndex - a.brandIndex;
-            default:
-              return b.marketValue - a.marketValue;
-          }
-        });
-
-        return result.slice(0, limit);
+    // Sort
+    result.sort((a, b) => {
+      switch (sortBy) {
+        case "revenue":
+          return b.revenue - a.revenue;
+        case "trophies":
+          return b.trophies - a.trophies;
+        case "brandIndex":
+          return b.brandIndex - a.brandIndex;
+        default:
+          return b.marketValue - a.marketValue;
       }
-    );
+    });
+
+    const data = result.slice(0, limit);
+    const duration = Date.now() - startTime;
 
     return NextResponse.json({
       data,
       meta: {
         total: data.length,
-        cached,
+        cached: false,
         duration,
         timestamp: new Date().toISOString(),
       },
