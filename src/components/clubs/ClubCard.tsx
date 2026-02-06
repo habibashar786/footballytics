@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import { cn, formatCurrency, formatNumber } from "@/lib/utils";
+import { cn, formatCurrency, formatNumber, getPlaceholderImage } from "@/lib/utils";
 import { Club } from "@/types";
-import { Trophy, Users, TrendingUp, Building2, DollarSign } from "lucide-react";
+import { Trophy, Users, TrendingUp, Building2, DollarSign, Shield } from "lucide-react";
 
 interface ClubCardProps {
   club: Club;
@@ -18,6 +19,8 @@ export function ClubCard({
   showDetails = true,
   className,
 }: ClubCardProps) {
+  const [logoError, setLogoError] = useState(false);
+
   const getRankBadge = (rank: number) => {
     if (rank === 1) return "bg-gradient-to-r from-yellow-400 to-yellow-600 text-black";
     if (rank === 2) return "bg-gradient-to-r from-gray-300 to-gray-500 text-black";
@@ -33,6 +36,23 @@ export function ClubCard({
   };
 
   const wageStatus = wageRatioStatus();
+
+  // Generate a club color based on name for fallback
+  const getClubColor = (name: string) => {
+    const colors: Record<string, string> = {
+      'Real Madrid': '1a1a2e',
+      'Barcelona': 'a50044',
+      'Man City': '6caddf',
+      'Liverpool': 'c8102e',
+      'Bayern': 'dc052d',
+      'PSG': '004170',
+      'Al-Hilal': '1a2b5f',
+      'Al-Nassr': 'ffd700',
+      'Flamengo': 'b52126',
+      'Palmeiras': '006437',
+    };
+    return colors[club.shortName] || '1a1a2e';
+  };
 
   return (
     <div
@@ -63,16 +83,24 @@ export function ClubCard({
       <div className="relative z-10">
         {/* Club Logo & Name */}
         <div className="flex items-start gap-4 mb-6">
-          <div className="relative h-20 w-20 flex-shrink-0">
-            <Image
-              src={club.logo}
-              alt={club.name}
-              fill
-              className="object-contain group-hover:scale-110 transition-transform duration-500"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(club.shortName)}&background=1a1a2e&color=fbbf24&size=80`;
-              }}
-            />
+          <div className="relative h-20 w-20 flex-shrink-0 flex items-center justify-center">
+            {logoError ? (
+              <div 
+                className="h-16 w-16 rounded-xl flex items-center justify-center text-2xl font-bold"
+                style={{ backgroundColor: `#${getClubColor(club.shortName)}` }}
+              >
+                <Shield className="h-8 w-8 text-white" />
+              </div>
+            ) : (
+              <Image
+                src={club.logo}
+                alt={club.name}
+                fill
+                className="object-contain group-hover:scale-110 transition-transform duration-500"
+                unoptimized
+                onError={() => setLogoError(true)}
+              />
+            )}
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="text-xl font-bold text-foreground group-hover:text-gold-400 transition-colors truncate">

@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import { cn, formatCurrency, formatNumber } from "@/lib/utils";
+import { cn, formatCurrency, formatNumber, getPlaceholderImage } from "@/lib/utils";
 import { Player } from "@/types";
-import { TrendingUp, TrendingDown, Minus, Star, Award, Users } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Star, Users, User } from "lucide-react";
 
 interface PlayerCardProps {
   player: Player;
@@ -20,6 +21,9 @@ export function PlayerCard({
   compact = false,
   className,
 }: PlayerCardProps) {
+  const [imageError, setImageError] = useState(false);
+  const [clubLogoError, setClubLogoError] = useState(false);
+
   const getRankBadge = (rank: number) => {
     if (rank === 1) return "bg-gradient-to-r from-yellow-400 to-yellow-600 text-black";
     if (rank === 2) return "bg-gradient-to-r from-gray-300 to-gray-500 text-black";
@@ -38,6 +42,9 @@ export function PlayerCard({
     }
   };
 
+  const fallbackImage = getPlaceholderImage("player", player.name);
+  const fallbackClubLogo = getPlaceholderImage("club", player.clubName);
+
   if (compact) {
     return (
       <div
@@ -49,7 +56,6 @@ export function PlayerCard({
           className
         )}
       >
-        {/* Rank */}
         {rank && (
           <div
             className={cn(
@@ -61,26 +67,26 @@ export function PlayerCard({
           </div>
         )}
 
-        {/* Photo */}
-        <div className="relative h-12 w-12 rounded-full overflow-hidden bg-white/10">
-          <Image
-            src={player.photo}
-            alt={player.name}
-            fill
-            className="object-cover"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=random`;
-            }}
-          />
+        <div className="relative h-12 w-12 rounded-full overflow-hidden bg-gradient-to-br from-gold-500/20 to-purple-500/20 flex items-center justify-center">
+          {imageError ? (
+            <User className="h-6 w-6 text-gold-400" />
+          ) : (
+            <Image
+              src={player.photo}
+              alt={player.name}
+              fill
+              className="object-cover"
+              unoptimized
+              onError={() => setImageError(true)}
+            />
+          )}
         </div>
 
-        {/* Info */}
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-sm truncate">{player.name}</p>
           <p className="text-xs text-muted-foreground">{player.clubName}</p>
         </div>
 
-        {/* Value */}
         <div className="text-right">
           <p className="font-bold text-gold-400">{formatCurrency(player.marketValue)}</p>
           <div className="flex items-center justify-end gap-1">
@@ -92,12 +98,7 @@ export function PlayerCard({
   }
 
   return (
-    <div
-      className={cn(
-        "player-card group cursor-pointer",
-        className
-      )}
-    >
+    <div className={cn("player-card group cursor-pointer", className)}>
       {/* Rank Badge */}
       {rank && (
         <div
@@ -113,36 +114,47 @@ export function PlayerCard({
 
       {/* Club Logo */}
       <div className="absolute top-3 right-3 z-10">
-        <Image
-          src={player.clubLogo}
-          alt={player.clubName}
-          width={32}
-          height={32}
-          className="rounded-lg shadow-lg"
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.display = 'none';
-          }}
-        />
+        {clubLogoError ? (
+          <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center text-xs font-bold text-gold-400">
+            {player.clubName.charAt(0)}
+          </div>
+        ) : (
+          <Image
+            src={player.clubLogo}
+            alt={player.clubName}
+            width={32}
+            height={32}
+            className="rounded-lg shadow-lg bg-white/10"
+            unoptimized
+            onError={() => setClubLogoError(true)}
+          />
+        )}
       </div>
 
       {/* Player Photo */}
-      <div className="relative h-48 mb-4 overflow-hidden rounded-xl bg-gradient-to-b from-white/5 to-transparent">
-        <Image
-          src={player.photo}
-          alt={player.name}
-          fill
-          className="object-contain object-bottom group-hover:scale-105 transition-transform duration-500"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=1a1a2e&color=fff&size=200`;
-          }}
-        />
-        {/* Gradient overlay */}
+      <div className="relative h-48 mb-4 overflow-hidden rounded-xl bg-gradient-to-b from-white/5 to-transparent flex items-center justify-center">
+        {imageError ? (
+          <div className="flex flex-col items-center justify-center">
+            <div className="h-24 w-24 rounded-full bg-gradient-to-br from-gold-500/30 to-purple-500/30 flex items-center justify-center">
+              <User className="h-12 w-12 text-gold-400" />
+            </div>
+            <span className="mt-2 text-sm text-muted-foreground">{player.shortName}</span>
+          </div>
+        ) : (
+          <Image
+            src={player.photo}
+            alt={player.name}
+            fill
+            className="object-contain object-bottom group-hover:scale-105 transition-transform duration-500"
+            unoptimized
+            onError={() => setImageError(true)}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
       </div>
 
       {/* Player Info */}
       <div className="space-y-3">
-        {/* Name & Position */}
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-lg">{player.nationalityFlag}</span>
