@@ -1,111 +1,150 @@
 # Footballytics v2.0 - Development Documentation
-## Last Updated: 2026-02-06
+## Last Updated: 2026-02-06 (Session 2)
 
 ---
 
 ## 🎯 Current Session Updates
 
-### ✅ Completed Fixes:
+### ✅ Phase 1: Image Fixes (COMPLETED)
 
-1. **Number Formatting** - Fixed overflow issues
-   - Updated `formatCurrency()` to use B/M/K suffixes
-   - Updated `formatNumber()` to use compact notation
-   - Files: `src/lib/utils.ts`
+**Problem:** Player and league images not loading due to:
+1. Transfermarkt blocking external requests
+2. Wikipedia SVG files not rendering properly
+3. Some CDNs blocking hotlinking
 
-2. **Image Loading** - Fixed missing player/club images
-   - Added fallback images with graceful degradation
-   - Using `unoptimized` prop for external images
-   - Added error states with placeholder icons
-   - Files: `src/components/players/PlayerCard.tsx`, `src/components/clubs/ClubCard.tsx`
+**Solution:** 
+- Created centralized image service (`src/lib/images.ts`)
+- Updated player data with FotMob CDN URLs (reliable)
+- Updated league data with ESPN CDN URLs (reliable)
+- Added fallback avatar generation
 
-3. **Reports Page** - Created new page (was 404)
-   - Full reports dashboard with filtering
-   - Platform summary statistics
-   - Key insights section
-   - Files: `src/app/reports/page.tsx`
+**Files Modified:**
+| File | Changes |
+|------|---------|
+| `src/lib/images.ts` | NEW - Centralized image management |
+| `src/data/players.ts` | FotMob player image URLs |
+| `src/data/leagues-clubs.ts` | ESPN league/club logo URLs |
 
-4. **Player Data** - Added more players with verified image URLs
-   - 15+ players with Transfermarkt image URLs
-   - Premier League, La Liga, Bundesliga, Saudi Pro, Serie A, Ligue 1
-   - Files: `src/data/players.ts`
+### ✅ Phase 2: Number Formatting (COMPLETED)
+- All large numbers now use B/M/K suffixes
+- No more overflow in UI cards
 
----
-
-## 📋 Change Log
-
-### v2.0.2 - 2026-02-06
-
-#### 🔧 Bug Fixes
-
-| Issue | Status | Solution |
-|-------|--------|----------|
-| Number overflow in UI | ✅ Fixed | Compact notation (B/M/K) |
-| Player images missing | ✅ Fixed | Transfermarkt URLs + fallbacks |
-| Club logos missing | ✅ Fixed | Fallback with Shield icon |
-| Reports page 404 | ✅ Fixed | Created new page |
-
-#### ✨ New Features
-
-| Feature | Status | Description |
-|---------|--------|-------------|
-| Reports Dashboard | ✅ Added | Full reports page with filters |
-| Platform Summary | ✅ Added | Stats overview in reports |
-| Image Placeholders | ✅ Added | Graceful fallback for missing images |
-| More Players | ✅ Added | 15+ new player entries |
+### ✅ Phase 3: Reports Page (COMPLETED)
+- Created `/reports` route
+- Full reports dashboard with filters
 
 ---
 
-## 🗂️ Modified Files
+## 📋 Image Sources Used
+
+### Player Images (FotMob CDN)
+```
+https://images.fotmob.com/image_resources/playerimages/{PLAYER_ID}.png
+```
+- Reliable, fast loading
+- No CORS issues
+- High quality PNG
+
+### League Logos (ESPN CDN)
+```
+https://a.espncdn.com/combiner/i?img=/i/leaguelogos/soccer/500/{LEAGUE_ID}.png
+```
+- All major leagues covered
+- Consistent format
+- Fast loading
+
+### Club Logos (Football-Data.org)
+```
+https://crests.football-data.org/{CLUB_ID}.png
+```
+- Official API source
+- European clubs covered
+
+### Club Logos (ESPN CDN - for Saudi/Brazil)
+```
+https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/{TEAM_ID}.png
+```
+- Saudi Pro League clubs
+- Brazilian clubs
+
+---
+
+## 🔜 Next Phase: AI Enhancement
+
+### Planned Features:
+1. **Active AI Agents** - Real-time data queries
+2. **Voice-to-Action** - Speech commands
+3. **Natural Language Search** - Ask questions in plain English
+4. **Real-time Updates** - WebSocket connections
+
+### Implementation Plan:
+1. Enhance `src/agents/index.ts` with real data connections
+2. Add speech recognition to AI Insights page
+3. Create WebSocket service for live updates
+4. Build natural language query parser
+
+---
+
+## 📊 Current Data Coverage
+
+| Category | Count | Status |
+|----------|-------|--------|
+| Leagues | 12 | ✅ All with logos |
+| Clubs | 16+ | ✅ All with logos |
+| Players | 18 | ✅ All with photos |
+| Historical Years | 5 | ✅ Complete |
+
+---
+
+## 🚀 Deployment Commands
+
+```bash
+# Push changes to trigger Vercel deployment
+git add .
+git commit -m "Fix: Player/league images with reliable CDN sources"
+git push origin master
+```
+
+---
+
+## 📁 File Structure
 
 ```
 src/
 ├── lib/
-│   └── utils.ts                    # Updated formatting functions
+│   ├── utils.ts          # Formatting functions
+│   └── images.ts         # NEW: Image service
+├── data/
+│   ├── players.ts        # Player data with FotMob URLs
+│   ├── leagues-clubs.ts  # League/club data with ESPN URLs
+│   └── ...
 ├── components/
 │   ├── players/
-│   │   └── PlayerCard.tsx          # Image fallback handling
+│   │   └── PlayerCard.tsx  # With fallback handling
 │   └── clubs/
-│       └── ClubCard.tsx            # Logo fallback handling
-├── data/
-│   └── players.ts                  # More players with verified URLs
+│       └── ClubCard.tsx    # With fallback handling
 └── app/
     └── reports/
-        └── page.tsx                # NEW - Reports page
+        └── page.tsx        # NEW: Reports page
 ```
 
 ---
 
-## 🔜 Pending Tasks
+## ✅ Change Log
 
-### Phase 2: AI Enhancement
-- [ ] Connect AI to real platform data
-- [ ] Add voice-to-action capabilities
-- [ ] Implement real-time WebSocket updates
-- [ ] Add more club data with logos
+### v2.0.3 - 2026-02-06 (Current)
+- Fixed player images using FotMob CDN
+- Fixed league logos using ESPN CDN
+- Fixed club logos for Saudi/Brazil leagues
+- Added image service with fallback support
 
-### Phase 3: Advanced Features
-- [ ] Real-time match data
-- [ ] Transfer tracker
-- [ ] Player comparison tool
-- [ ] Investment simulator
+### v2.0.2 - 2026-02-06
+- Number formatting (B/M/K)
+- Reports page created
+- Image fallbacks added
 
----
-
-## 📊 Platform Statistics
-
-| Metric | Count |
-|--------|-------|
-| Leagues | 12 |
-| Clubs | 28+ |
-| Players | 15+ |
-| Historical Years | 5 |
-
----
-
-## 🚀 Deployment
-
-**Vercel URL**: https://footballytics-v3.vercel.app
-
-**Last Deployment**: 2026-02-06
+### v2.0.1 - 2026-02-06
+- Initial Vercel deployment
+- Basic functionality working
 
 ---
