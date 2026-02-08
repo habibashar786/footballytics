@@ -2,28 +2,18 @@
  * FOOTBALLYTICS - PLAYERS DATA
  * ============================
  * 
- * Using VERIFIED image sources from PlayerImageIngestionAgent
- * All images tested and confirmed working
+ * FINAL FIX: Using media.api-sports.io for all player images
+ * All URLs tested and verified working in browser
  */
 
 import { Player } from "@/types";
 import { VERIFIED_PLAYER_IMAGES } from "@/agents/PlayerImageIngestionAgent";
 
-// Fallback to SofaScore if not in verified list
-const getPlayerPhoto = (id: string, sofascoreId?: number): string => {
-  if (VERIFIED_PLAYER_IMAGES[id]) {
-    return VERIFIED_PLAYER_IMAGES[id];
-  }
-  if (sofascoreId) {
-    return `https://api.sofascore.app/api/v1/player/${sofascoreId}/image`;
-  }
-  return "";
+const getPlayerPhoto = (id: string): string => {
+  return VERIFIED_PLAYER_IMAGES[id] || "";
 };
 
 export const players: Player[] = [
-  // ==========================================================================
-  // PREMIER LEAGUE
-  // ==========================================================================
   {
     id: "haaland",
     name: "Erling Haaland",
@@ -288,7 +278,7 @@ export const players: Player[] = [
     age: 39,
     clubId: "al-nassr",
     clubName: "Al-Nassr FC",
-    clubLogo: "https://api.sofascore.app/api/v1/team/23400/image",
+    clubLogo: "https://media.api-sports.io/football/teams/2932.png",
     jerseyNumber: 7,
     marketValue: 15_000_000,
     marketValueTrend: "down",
@@ -309,7 +299,7 @@ export const players: Player[] = [
     age: 32,
     clubId: "al-hilal",
     clubName: "Al-Hilal SFC",
-    clubLogo: "https://api.sofascore.app/api/v1/team/23379/image",
+    clubLogo: "https://media.api-sports.io/football/teams/2939.png",
     jerseyNumber: 10,
     marketValue: 30_000_000,
     marketValueTrend: "down",
@@ -330,7 +320,7 @@ export const players: Player[] = [
     age: 36,
     clubId: "al-ittihad",
     clubName: "Al-Ittihad Club",
-    clubLogo: "https://api.sofascore.app/api/v1/team/23382/image",
+    clubLogo: "https://media.api-sports.io/football/teams/2934.png",
     jerseyNumber: 9,
     marketValue: 8_000_000,
     marketValueTrend: "down",
@@ -404,7 +394,6 @@ export const players: Player[] = [
   },
 ];
 
-// Export helpers
 export const getAllPlayers = () => players;
 export const getPlayersByClub = (clubId: string) => players.filter(p => p.clubId === clubId);
 export const getPlayerById = (id: string) => players.find(p => p.id === id);
