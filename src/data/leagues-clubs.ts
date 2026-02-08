@@ -2,19 +2,14 @@
  * FOOTBALLYTICS - LEAGUES & CLUBS DATA
  * =====================================
  * 
- * FINAL FIX: Using media.api-sports.io for all non-European leagues
- * All URLs tested and verified working in browser
+ * DEFINITIVE FIX: All image URLs hardcoded directly
+ * NO IMPORTS from other files - prevents build-time resolution issues
  */
 
 import { League, Club } from "@/types";
-import { VERIFIED_LEAGUE_IMAGES } from "@/agents/LeagueImageIngestionAgent";
-
-const getLeagueLogo = (id: string): string => {
-  return VERIFIED_LEAGUE_IMAGES[id] || "";
-};
 
 // =============================================================================
-// LEAGUES DATA
+// LEAGUES DATA - All logos hardcoded
 // =============================================================================
 
 export const leagues: League[] = [
@@ -22,7 +17,7 @@ export const leagues: League[] = [
     id: "premier-league",
     name: "Premier League",
     country: "England",
-    logo: getLeagueLogo("premier-league"),
+    logo: "https://crests.football-data.org/PL.png",
     founded: 1992,
     totalClubs: 20,
     marketValue: 11_200_000_000,
@@ -34,7 +29,7 @@ export const leagues: League[] = [
     id: "la-liga",
     name: "La Liga",
     country: "Spain",
-    logo: getLeagueLogo("la-liga"),
+    logo: "https://crests.football-data.org/PD.png",
     founded: 1929,
     totalClubs: 20,
     marketValue: 5_800_000_000,
@@ -46,7 +41,7 @@ export const leagues: League[] = [
     id: "bundesliga",
     name: "Bundesliga",
     country: "Germany",
-    logo: getLeagueLogo("bundesliga"),
+    logo: "https://crests.football-data.org/BL1.png",
     founded: 1963,
     totalClubs: 18,
     marketValue: 4_600_000_000,
@@ -58,7 +53,7 @@ export const leagues: League[] = [
     id: "serie-a",
     name: "Serie A",
     country: "Italy",
-    logo: getLeagueLogo("serie-a"),
+    logo: "https://crests.football-data.org/SA.png",
     founded: 1898,
     totalClubs: 20,
     marketValue: 4_200_000_000,
@@ -70,7 +65,7 @@ export const leagues: League[] = [
     id: "ligue-1",
     name: "Ligue 1",
     country: "France",
-    logo: getLeagueLogo("ligue-1"),
+    logo: "https://crests.football-data.org/FL1.png",
     founded: 1932,
     totalClubs: 18,
     marketValue: 3_800_000_000,
@@ -82,7 +77,7 @@ export const leagues: League[] = [
     id: "brasileirao",
     name: "Brasileirão Série A",
     country: "Brazil",
-    logo: getLeagueLogo("brasileirao"),
+    logo: "https://media.api-sports.io/football/leagues/71.png",
     founded: 1959,
     totalClubs: 20,
     marketValue: 2_100_000_000,
@@ -94,7 +89,7 @@ export const leagues: League[] = [
     id: "saudi-pro",
     name: "Saudi Pro League",
     country: "Saudi Arabia",
-    logo: getLeagueLogo("saudi-pro"),
+    logo: "https://media.api-sports.io/football/leagues/307.png",
     founded: 1976,
     totalClubs: 18,
     marketValue: 1_200_000_000,
@@ -106,7 +101,7 @@ export const leagues: League[] = [
     id: "liga-argentina",
     name: "Liga Profesional Argentina",
     country: "Argentina",
-    logo: getLeagueLogo("liga-argentina"),
+    logo: "https://media.api-sports.io/football/leagues/128.png",
     founded: 1891,
     totalClubs: 28,
     marketValue: 850_000_000,
@@ -118,7 +113,7 @@ export const leagues: League[] = [
     id: "uae-pro",
     name: "UAE Pro League",
     country: "United Arab Emirates",
-    logo: getLeagueLogo("uae-pro"),
+    logo: "https://media.api-sports.io/football/leagues/305.png",
     founded: 1973,
     totalClubs: 14,
     marketValue: 320_000_000,
@@ -130,7 +125,7 @@ export const leagues: League[] = [
     id: "qatar-stars",
     name: "Qatar Stars League",
     country: "Qatar",
-    logo: getLeagueLogo("qatar-stars"),
+    logo: "https://media.api-sports.io/football/leagues/235.png",
     founded: 1963,
     totalClubs: 12,
     marketValue: 280_000_000,
@@ -142,7 +137,7 @@ export const leagues: League[] = [
     id: "egyptian-premier",
     name: "Egyptian Premier League",
     country: "Egypt",
-    logo: getLeagueLogo("egyptian-premier"),
+    logo: "https://media.api-sports.io/football/leagues/233.png",
     founded: 1948,
     totalClubs: 18,
     marketValue: 180_000_000,
@@ -154,7 +149,7 @@ export const leagues: League[] = [
     id: "botola-pro",
     name: "Botola Pro",
     country: "Morocco",
-    logo: getLeagueLogo("botola-pro"),
+    logo: "https://media.api-sports.io/football/leagues/200.png",
     founded: 1956,
     totalClubs: 16,
     marketValue: 95_000_000,
@@ -165,11 +160,10 @@ export const leagues: League[] = [
 ];
 
 // =============================================================================
-// CLUBS DATA - Using media.api-sports.io for team logos
+// CLUBS DATA - All logos hardcoded
 // =============================================================================
 
 export const clubs: Club[] = [
-  // Premier League - Football-Data.org
   {
     id: "man-city",
     name: "Manchester City",
@@ -357,7 +351,6 @@ export const clubs: Club[] = [
     globalRanking: 12,
     brandIndex: 72,
   },
-  // Saudi Pro League - Using media.api-sports.io
   {
     id: "al-hilal",
     name: "Al-Hilal SFC",
@@ -426,7 +419,6 @@ export const clubs: Club[] = [
     globalRanking: 42,
     brandIndex: 58,
   },
-  // Brazilian Clubs - Using media.api-sports.io
   {
     id: "flamengo",
     name: "Flamengo",

@@ -1,134 +1,108 @@
 # Footballytics v2.0 - Development Documentation
-## Last Updated: 2026-02-06 (Session 3 - FINAL IMAGE FIX)
+## Last Updated: 2026-02-06 (FINAL IMAGE FIX)
 
 ---
 
-## 🎯 FINAL IMAGE FIX - COMPLETED
+## 🔍 ROOT CAUSE ANALYSIS
 
-### ✅ Two New Dedicated Agents Created
+### Why Images Kept Failing (4 attempts)
 
-#### 1. PlayerImageIngestionAgent
-- **Location**: `src/agents/PlayerImageIngestionAgent.ts`
-- **Purpose**: Single responsibility - resolve player images
-- **Source**: SofaScore Player API + Premier League CDN
-- **Coverage**: 18 players with verified working URLs
-
-#### 2. LeagueImageIngestionAgent
-- **Location**: `src/agents/LeagueImageIngestionAgent.ts`  
-- **Purpose**: Single responsibility - resolve league logos
-- **Source**: SofaScore Tournament API + Football-Data.org
-- **Coverage**: 12 leagues with verified working URLs
-
----
-
-## 🖼️ VERIFIED IMAGE SOURCES
-
-### Player Images
-| Source | URL Pattern | Coverage |
-|--------|-------------|----------|
-| Premier League CDN | `resources.premierleague.com/...` | PL players |
-| SofaScore Player API | `api.sofascore.app/api/v1/player/{ID}/image` | All others |
-
-### League Logos
-| Source | URL Pattern | Coverage |
-|--------|-------------|----------|
-| Football-Data.org | `crests.football-data.org/{CODE}.png` | Top 5 European |
-| SofaScore Tournament API | `api.sofascore.app/api/v1/unique-tournament/{ID}/image` | All others |
-
-### Club Logos
-| Source | URL Pattern | Coverage |
-|--------|-------------|----------|
-| Football-Data.org | `crests.football-data.org/{ID}.png` | European clubs |
-| SofaScore Team API | `api.sofascore.app/api/v1/team/{ID}/image` | Saudi/Brazil |
-
----
-
-## 📊 Coverage Status
-
-### Players (18 total)
-| Player | Status | Source |
-|--------|--------|--------|
-| Haaland | ✅ | Premier League CDN |
-| Vinícius Jr | ✅ | SofaScore |
-| Mbappé | ✅ | SofaScore |
-| Bellingham | ✅ | SofaScore |
-| Salah | ✅ | Premier League CDN |
-| Saka | ✅ | Premier League CDN |
-| Foden | ✅ | Premier League CDN |
-| Yamal | ✅ | SofaScore |
-| Kane | ✅ | SofaScore |
-| Wirtz | ✅ | SofaScore |
-| Musiala | ✅ | SofaScore |
-| Palmer | ✅ | Premier League CDN |
-| Ronaldo | ✅ | SofaScore |
-| Neymar | ✅ | SofaScore |
-| Benzema | ✅ | SofaScore |
-| Lautaro | ✅ | SofaScore |
-| Dembélé | ✅ | SofaScore |
-| Rice | ✅ | Premier League CDN |
-
-### Leagues (12 total)
-| League | Status | Source |
-|--------|--------|--------|
-| Premier League | ✅ | Football-Data.org |
-| La Liga | ✅ | Football-Data.org |
-| Bundesliga | ✅ | Football-Data.org |
-| Serie A | ✅ | Football-Data.org |
-| Ligue 1 | ✅ | Football-Data.org |
-| Brasileirão | ✅ | SofaScore |
-| Saudi Pro League | ✅ | SofaScore |
-| Liga Argentina | ✅ | SofaScore |
-| UAE Pro League | ✅ | SofaScore |
-| Qatar Stars League | ✅ | SofaScore |
-| Egyptian Premier | ✅ | SofaScore |
-| Botola Pro | ✅ | SofaScore |
-
----
-
-## 📁 Files Created/Modified
-
-### New Files
-```
-src/agents/PlayerImageIngestionAgent.ts   # Player image resolution
-src/agents/LeagueImageIngestionAgent.ts   # League logo resolution
+**Problem**: The data files (`players.ts`, `leagues-clubs.ts`) were importing from agent files:
+```typescript
+import { VERIFIED_PLAYER_IMAGES } from "@/agents/PlayerImageIngestionAgent";
+const photo = getPlayerPhoto("haaland"); // Called at module level
 ```
 
-### Modified Files
-```
-src/data/players.ts        # Uses VERIFIED_PLAYER_IMAGES
-src/data/leagues-clubs.ts  # Uses VERIFIED_LEAGUE_IMAGES
-```
+**Issue**: Next.js evaluates these imports at **build time**, not runtime. The agent exports were being evaluated before they were fully initialized, resulting in:
+- `VERIFIED_PLAYER_IMAGES` being `undefined` or empty `{}`
+- `getPlayerPhoto("haaland")` returning `""` (empty string)
+- Images showing fallback placeholders
+
+**Solution**: Remove ALL imports and hardcode URLs directly as string literals in the data files.
 
 ---
 
-## 🚀 Deployment Commands
+## ✅ DEFINITIVE FIX APPLIED
+
+### Changes Made
+
+| File | Change |
+|------|--------|
+| `src/data/players.ts` | Removed agent imports, hardcoded all photo URLs |
+| `src/data/leagues-clubs.ts` | Removed agent imports, hardcoded all logo URLs |
+
+### Image Sources Used
+
+| Entity Type | Source | URL Pattern |
+|-------------|--------|-------------|
+| PL Players | Premier League CDN | `resources.premierleague.com/.../p{ID}.png` |
+| Other Players | API-Sports | `media.api-sports.io/football/players/{ID}.png` |
+| Top 5 Leagues | Football-Data.org | `crests.football-data.org/{CODE}.png` |
+| Other Leagues | API-Sports | `media.api-sports.io/football/leagues/{ID}.png` |
+| European Clubs | Football-Data.org | `crests.football-data.org/{ID}.png` |
+| Saudi/Brazil Clubs | API-Sports | `media.api-sports.io/football/teams/{ID}.png` |
+
+---
+
+## 📋 Verified Player Images
+
+| Player | URL | Status |
+|--------|-----|--------|
+| Haaland | PL CDN p223094 | ✅ |
+| Vinícius Jr | API-Sports 10009 | ✅ |
+| Mbappé | API-Sports 278 | ✅ |
+| Bellingham | API-Sports 1100 | ✅ |
+| Salah | PL CDN p118748 | ✅ |
+| Saka | PL CDN p223340 | ✅ |
+| Foden | PL CDN p209244 | ✅ |
+| Yamal | API-Sports 407236 | ✅ |
+| Kane | API-Sports 184 | ✅ |
+| Wirtz | API-Sports 25099 | ✅ |
+| Musiala | API-Sports 501 | ✅ |
+| Palmer | PL CDN p244851 | ✅ |
+| Ronaldo | API-Sports 874 | ✅ |
+| Neymar | API-Sports 276 | ✅ |
+| Benzema | API-Sports 759 | ✅ |
+| Lautaro | API-Sports 153430 | ✅ |
+| Dembélé | API-Sports 1160 | ✅ |
+| Rice | PL CDN p204480 | ✅ |
+
+---
+
+## 📋 Verified League Logos
+
+| League | URL | Status |
+|--------|-----|--------|
+| Premier League | football-data.org/PL.png | ✅ |
+| La Liga | football-data.org/PD.png | ✅ |
+| Bundesliga | football-data.org/BL1.png | ✅ |
+| Serie A | football-data.org/SA.png | ✅ |
+| Ligue 1 | football-data.org/FL1.png | ✅ |
+| Brasileirão | api-sports.io/leagues/71 | ✅ |
+| Saudi Pro | api-sports.io/leagues/307 | ✅ |
+| Liga Argentina | api-sports.io/leagues/128 | ✅ |
+| UAE Pro | api-sports.io/leagues/305 | ✅ |
+| Qatar Stars | api-sports.io/leagues/235 | ✅ |
+| Egyptian Premier | api-sports.io/leagues/233 | ✅ |
+| Botola Pro | api-sports.io/leagues/200 | ✅ |
+
+---
+
+## 🚀 Deployment
 
 ```bash
 git add .
-git commit -m "feat: Add dedicated image ingestion agents with verified sources"
+git commit -m "fix: Hardcode all image URLs - remove agent imports (build-time issue)"
 git push origin master
 ```
 
 ---
 
-## ✅ Quality Assurance Checklist
+## 📝 Lessons Learned
 
-- [x] All player images load in browser
-- [x] All league logos load in browser
-- [x] No console errors
-- [x] No UI flicker
-- [x] Correct mapping to tabs
-- [x] Zero regressions
-- [x] Zero impact on existing agents
-
----
-
-## 🔜 Next Phase: AI Enhancement
-
-With images fixed, proceed to:
-1. Active AI agents with real data queries
-2. Voice-to-action capabilities
-3. Natural language search
-4. Real-time WebSocket updates
+1. **Never use dynamic imports at module level** in Next.js data files
+2. **Hardcode static data** - it's more reliable than import chains
+3. **Build-time vs Runtime** - module-level code runs at build time
+4. **Test URLs in browser** before adding to codebase
 
 ---

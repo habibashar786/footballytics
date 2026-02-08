@@ -2,23 +2,18 @@
  * FOOTBALLYTICS - PLAYERS DATA
  * ============================
  * 
- * FINAL FIX: Using media.api-sports.io for all player images
- * All URLs tested and verified working in browser
+ * DEFINITIVE FIX: All image URLs hardcoded directly
+ * NO IMPORTS from other files - prevents build-time resolution issues
  */
 
 import { Player } from "@/types";
-import { VERIFIED_PLAYER_IMAGES } from "@/agents/PlayerImageIngestionAgent";
-
-const getPlayerPhoto = (id: string): string => {
-  return VERIFIED_PLAYER_IMAGES[id] || "";
-};
 
 export const players: Player[] = [
   {
     id: "haaland",
     name: "Erling Haaland",
     shortName: "Haaland",
-    photo: getPlayerPhoto("haaland"),
+    photo: "https://resources.premierleague.com/premierleague/photos/players/250x250/p223094.png",
     nationality: "Norway",
     nationalityFlag: "🇳🇴",
     position: "Centre-Forward",
@@ -39,7 +34,7 @@ export const players: Player[] = [
     id: "vinicius",
     name: "Vinícius Júnior",
     shortName: "Vinícius Jr",
-    photo: getPlayerPhoto("vinicius"),
+    photo: "https://media.api-sports.io/football/players/10009.png",
     nationality: "Brazil",
     nationalityFlag: "🇧🇷",
     position: "Left Winger",
@@ -60,7 +55,7 @@ export const players: Player[] = [
     id: "mbappe",
     name: "Kylian Mbappé",
     shortName: "Mbappé",
-    photo: getPlayerPhoto("mbappe"),
+    photo: "https://media.api-sports.io/football/players/278.png",
     nationality: "France",
     nationalityFlag: "🇫🇷",
     position: "Left Winger",
@@ -81,7 +76,7 @@ export const players: Player[] = [
     id: "bellingham",
     name: "Jude Bellingham",
     shortName: "Bellingham",
-    photo: getPlayerPhoto("bellingham"),
+    photo: "https://media.api-sports.io/football/players/1100.png",
     nationality: "England",
     nationalityFlag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
     position: "Attacking Midfield",
@@ -102,7 +97,7 @@ export const players: Player[] = [
     id: "salah",
     name: "Mohamed Salah",
     shortName: "Salah",
-    photo: getPlayerPhoto("salah"),
+    photo: "https://resources.premierleague.com/premierleague/photos/players/250x250/p118748.png",
     nationality: "Egypt",
     nationalityFlag: "🇪🇬",
     position: "Right Winger",
@@ -123,7 +118,7 @@ export const players: Player[] = [
     id: "saka",
     name: "Bukayo Saka",
     shortName: "Saka",
-    photo: getPlayerPhoto("saka"),
+    photo: "https://resources.premierleague.com/premierleague/photos/players/250x250/p223340.png",
     nationality: "England",
     nationalityFlag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
     position: "Right Winger",
@@ -144,7 +139,7 @@ export const players: Player[] = [
     id: "foden",
     name: "Phil Foden",
     shortName: "Foden",
-    photo: getPlayerPhoto("foden"),
+    photo: "https://resources.premierleague.com/premierleague/photos/players/250x250/p209244.png",
     nationality: "England",
     nationalityFlag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
     position: "Attacking Midfield",
@@ -165,7 +160,7 @@ export const players: Player[] = [
     id: "yamal",
     name: "Lamine Yamal",
     shortName: "Yamal",
-    photo: getPlayerPhoto("yamal"),
+    photo: "https://media.api-sports.io/football/players/407236.png",
     nationality: "Spain",
     nationalityFlag: "🇪🇸",
     position: "Right Winger",
@@ -186,7 +181,7 @@ export const players: Player[] = [
     id: "kane",
     name: "Harry Kane",
     shortName: "Kane",
-    photo: getPlayerPhoto("kane"),
+    photo: "https://media.api-sports.io/football/players/184.png",
     nationality: "England",
     nationalityFlag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
     position: "Centre-Forward",
@@ -207,7 +202,7 @@ export const players: Player[] = [
     id: "wirtz",
     name: "Florian Wirtz",
     shortName: "Wirtz",
-    photo: getPlayerPhoto("wirtz"),
+    photo: "https://media.api-sports.io/football/players/25099.png",
     nationality: "Germany",
     nationalityFlag: "🇩🇪",
     position: "Attacking Midfield",
@@ -228,7 +223,7 @@ export const players: Player[] = [
     id: "musiala",
     name: "Jamal Musiala",
     shortName: "Musiala",
-    photo: getPlayerPhoto("musiala"),
+    photo: "https://media.api-sports.io/football/players/501.png",
     nationality: "Germany",
     nationalityFlag: "🇩🇪",
     position: "Attacking Midfield",
@@ -249,7 +244,7 @@ export const players: Player[] = [
     id: "palmer",
     name: "Cole Palmer",
     shortName: "Palmer",
-    photo: getPlayerPhoto("palmer"),
+    photo: "https://resources.premierleague.com/premierleague/photos/players/250x250/p244851.png",
     nationality: "England",
     nationalityFlag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
     position: "Attacking Midfield",
@@ -270,7 +265,7 @@ export const players: Player[] = [
     id: "ronaldo",
     name: "Cristiano Ronaldo",
     shortName: "Ronaldo",
-    photo: getPlayerPhoto("ronaldo"),
+    photo: "https://media.api-sports.io/football/players/874.png",
     nationality: "Portugal",
     nationalityFlag: "🇵🇹",
     position: "Centre-Forward",
@@ -291,7 +286,7 @@ export const players: Player[] = [
     id: "neymar",
     name: "Neymar Jr",
     shortName: "Neymar",
-    photo: getPlayerPhoto("neymar"),
+    photo: "https://media.api-sports.io/football/players/276.png",
     nationality: "Brazil",
     nationalityFlag: "🇧🇷",
     position: "Left Winger",
@@ -312,7 +307,7 @@ export const players: Player[] = [
     id: "benzema",
     name: "Karim Benzema",
     shortName: "Benzema",
-    photo: getPlayerPhoto("benzema"),
+    photo: "https://media.api-sports.io/football/players/759.png",
     nationality: "France",
     nationalityFlag: "🇫🇷",
     position: "Centre-Forward",
@@ -333,7 +328,7 @@ export const players: Player[] = [
     id: "lautaro",
     name: "Lautaro Martínez",
     shortName: "Lautaro",
-    photo: getPlayerPhoto("lautaro"),
+    photo: "https://media.api-sports.io/football/players/153430.png",
     nationality: "Argentina",
     nationalityFlag: "🇦🇷",
     position: "Centre-Forward",
@@ -354,7 +349,7 @@ export const players: Player[] = [
     id: "dembele",
     name: "Ousmane Dembélé",
     shortName: "Dembélé",
-    photo: getPlayerPhoto("dembele"),
+    photo: "https://media.api-sports.io/football/players/1160.png",
     nationality: "France",
     nationalityFlag: "🇫🇷",
     position: "Right Winger",
@@ -375,7 +370,7 @@ export const players: Player[] = [
     id: "rice",
     name: "Declan Rice",
     shortName: "Rice",
-    photo: getPlayerPhoto("rice"),
+    photo: "https://resources.premierleague.com/premierleague/photos/players/250x250/p204480.png",
     nationality: "England",
     nationalityFlag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
     position: "Defensive Midfield",
