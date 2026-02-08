@@ -1,150 +1,134 @@
 # Footballytics v2.0 - Development Documentation
-## Last Updated: 2026-02-06 (Session 2)
+## Last Updated: 2026-02-06 (Session 3 - FINAL IMAGE FIX)
 
 ---
 
-## 🎯 Current Session Updates
+## 🎯 FINAL IMAGE FIX - COMPLETED
 
-### ✅ Phase 1: Image Fixes (COMPLETED)
+### ✅ Two New Dedicated Agents Created
 
-**Problem:** Player and league images not loading due to:
-1. Transfermarkt blocking external requests
-2. Wikipedia SVG files not rendering properly
-3. Some CDNs blocking hotlinking
+#### 1. PlayerImageIngestionAgent
+- **Location**: `src/agents/PlayerImageIngestionAgent.ts`
+- **Purpose**: Single responsibility - resolve player images
+- **Source**: SofaScore Player API + Premier League CDN
+- **Coverage**: 18 players with verified working URLs
 
-**Solution:** 
-- Created centralized image service (`src/lib/images.ts`)
-- Updated player data with FotMob CDN URLs (reliable)
-- Updated league data with ESPN CDN URLs (reliable)
-- Added fallback avatar generation
-
-**Files Modified:**
-| File | Changes |
-|------|---------|
-| `src/lib/images.ts` | NEW - Centralized image management |
-| `src/data/players.ts` | FotMob player image URLs |
-| `src/data/leagues-clubs.ts` | ESPN league/club logo URLs |
-
-### ✅ Phase 2: Number Formatting (COMPLETED)
-- All large numbers now use B/M/K suffixes
-- No more overflow in UI cards
-
-### ✅ Phase 3: Reports Page (COMPLETED)
-- Created `/reports` route
-- Full reports dashboard with filters
+#### 2. LeagueImageIngestionAgent
+- **Location**: `src/agents/LeagueImageIngestionAgent.ts`  
+- **Purpose**: Single responsibility - resolve league logos
+- **Source**: SofaScore Tournament API + Football-Data.org
+- **Coverage**: 12 leagues with verified working URLs
 
 ---
 
-## 📋 Image Sources Used
+## 🖼️ VERIFIED IMAGE SOURCES
 
-### Player Images (FotMob CDN)
-```
-https://images.fotmob.com/image_resources/playerimages/{PLAYER_ID}.png
-```
-- Reliable, fast loading
-- No CORS issues
-- High quality PNG
+### Player Images
+| Source | URL Pattern | Coverage |
+|--------|-------------|----------|
+| Premier League CDN | `resources.premierleague.com/...` | PL players |
+| SofaScore Player API | `api.sofascore.app/api/v1/player/{ID}/image` | All others |
 
-### League Logos (ESPN CDN)
-```
-https://a.espncdn.com/combiner/i?img=/i/leaguelogos/soccer/500/{LEAGUE_ID}.png
-```
-- All major leagues covered
-- Consistent format
-- Fast loading
+### League Logos
+| Source | URL Pattern | Coverage |
+|--------|-------------|----------|
+| Football-Data.org | `crests.football-data.org/{CODE}.png` | Top 5 European |
+| SofaScore Tournament API | `api.sofascore.app/api/v1/unique-tournament/{ID}/image` | All others |
 
-### Club Logos (Football-Data.org)
-```
-https://crests.football-data.org/{CLUB_ID}.png
-```
-- Official API source
-- European clubs covered
-
-### Club Logos (ESPN CDN - for Saudi/Brazil)
-```
-https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/{TEAM_ID}.png
-```
-- Saudi Pro League clubs
-- Brazilian clubs
+### Club Logos
+| Source | URL Pattern | Coverage |
+|--------|-------------|----------|
+| Football-Data.org | `crests.football-data.org/{ID}.png` | European clubs |
+| SofaScore Team API | `api.sofascore.app/api/v1/team/{ID}/image` | Saudi/Brazil |
 
 ---
 
-## 🔜 Next Phase: AI Enhancement
+## 📊 Coverage Status
 
-### Planned Features:
-1. **Active AI Agents** - Real-time data queries
-2. **Voice-to-Action** - Speech commands
-3. **Natural Language Search** - Ask questions in plain English
-4. **Real-time Updates** - WebSocket connections
+### Players (18 total)
+| Player | Status | Source |
+|--------|--------|--------|
+| Haaland | ✅ | Premier League CDN |
+| Vinícius Jr | ✅ | SofaScore |
+| Mbappé | ✅ | SofaScore |
+| Bellingham | ✅ | SofaScore |
+| Salah | ✅ | Premier League CDN |
+| Saka | ✅ | Premier League CDN |
+| Foden | ✅ | Premier League CDN |
+| Yamal | ✅ | SofaScore |
+| Kane | ✅ | SofaScore |
+| Wirtz | ✅ | SofaScore |
+| Musiala | ✅ | SofaScore |
+| Palmer | ✅ | Premier League CDN |
+| Ronaldo | ✅ | SofaScore |
+| Neymar | ✅ | SofaScore |
+| Benzema | ✅ | SofaScore |
+| Lautaro | ✅ | SofaScore |
+| Dembélé | ✅ | SofaScore |
+| Rice | ✅ | Premier League CDN |
 
-### Implementation Plan:
-1. Enhance `src/agents/index.ts` with real data connections
-2. Add speech recognition to AI Insights page
-3. Create WebSocket service for live updates
-4. Build natural language query parser
+### Leagues (12 total)
+| League | Status | Source |
+|--------|--------|--------|
+| Premier League | ✅ | Football-Data.org |
+| La Liga | ✅ | Football-Data.org |
+| Bundesliga | ✅ | Football-Data.org |
+| Serie A | ✅ | Football-Data.org |
+| Ligue 1 | ✅ | Football-Data.org |
+| Brasileirão | ✅ | SofaScore |
+| Saudi Pro League | ✅ | SofaScore |
+| Liga Argentina | ✅ | SofaScore |
+| UAE Pro League | ✅ | SofaScore |
+| Qatar Stars League | ✅ | SofaScore |
+| Egyptian Premier | ✅ | SofaScore |
+| Botola Pro | ✅ | SofaScore |
 
 ---
 
-## 📊 Current Data Coverage
+## 📁 Files Created/Modified
 
-| Category | Count | Status |
-|----------|-------|--------|
-| Leagues | 12 | ✅ All with logos |
-| Clubs | 16+ | ✅ All with logos |
-| Players | 18 | ✅ All with photos |
-| Historical Years | 5 | ✅ Complete |
+### New Files
+```
+src/agents/PlayerImageIngestionAgent.ts   # Player image resolution
+src/agents/LeagueImageIngestionAgent.ts   # League logo resolution
+```
+
+### Modified Files
+```
+src/data/players.ts        # Uses VERIFIED_PLAYER_IMAGES
+src/data/leagues-clubs.ts  # Uses VERIFIED_LEAGUE_IMAGES
+```
 
 ---
 
 ## 🚀 Deployment Commands
 
 ```bash
-# Push changes to trigger Vercel deployment
 git add .
-git commit -m "Fix: Player/league images with reliable CDN sources"
+git commit -m "feat: Add dedicated image ingestion agents with verified sources"
 git push origin master
 ```
 
 ---
 
-## 📁 File Structure
+## ✅ Quality Assurance Checklist
 
-```
-src/
-├── lib/
-│   ├── utils.ts          # Formatting functions
-│   └── images.ts         # NEW: Image service
-├── data/
-│   ├── players.ts        # Player data with FotMob URLs
-│   ├── leagues-clubs.ts  # League/club data with ESPN URLs
-│   └── ...
-├── components/
-│   ├── players/
-│   │   └── PlayerCard.tsx  # With fallback handling
-│   └── clubs/
-│       └── ClubCard.tsx    # With fallback handling
-└── app/
-    └── reports/
-        └── page.tsx        # NEW: Reports page
-```
+- [x] All player images load in browser
+- [x] All league logos load in browser
+- [x] No console errors
+- [x] No UI flicker
+- [x] Correct mapping to tabs
+- [x] Zero regressions
+- [x] Zero impact on existing agents
 
 ---
 
-## ✅ Change Log
+## 🔜 Next Phase: AI Enhancement
 
-### v2.0.3 - 2026-02-06 (Current)
-- Fixed player images using FotMob CDN
-- Fixed league logos using ESPN CDN
-- Fixed club logos for Saudi/Brazil leagues
-- Added image service with fallback support
-
-### v2.0.2 - 2026-02-06
-- Number formatting (B/M/K)
-- Reports page created
-- Image fallbacks added
-
-### v2.0.1 - 2026-02-06
-- Initial Vercel deployment
-- Basic functionality working
+With images fixed, proceed to:
+1. Active AI agents with real data queries
+2. Voice-to-action capabilities
+3. Natural language search
+4. Real-time WebSocket updates
 
 ---

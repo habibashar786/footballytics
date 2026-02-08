@@ -1,45 +1,30 @@
 /**
- * FOOTBALLYTICS - COMPREHENSIVE DATA SET
- * =======================================
+ * FOOTBALLYTICS - LEAGUES & CLUBS DATA
+ * =====================================
  * 
- * Extended dataset with WORKING image URLs
+ * Using VERIFIED image sources from LeagueImageIngestionAgent
+ * All images tested and confirmed working
  */
 
 import { League, Club } from "@/types";
+import { VERIFIED_LEAGUE_IMAGES } from "@/agents/LeagueImageIngestionAgent";
 
-// =============================================================================
-// LEAGUE LOGOS - Using reliable PNG sources
-// =============================================================================
-
-const LEAGUE_LOGOS = {
-  // Football-Data.org (reliable)
-  premierLeague: "https://crests.football-data.org/PL.png",
-  laLiga: "https://crests.football-data.org/PD.png",
-  bundesliga: "https://crests.football-data.org/BL1.png",
-  serieA: "https://crests.football-data.org/SA.png",
-  ligue1: "https://crests.football-data.org/FL1.png",
-  
-  // Logo CDN (reliable PNG)
-  saudiPro: "https://a.espncdn.com/combiner/i?img=/i/leaguelogos/soccer/500/4429.png",
-  uaePro: "https://a.espncdn.com/combiner/i?img=/i/leaguelogos/soccer/500/4430.png",
-  qatarStars: "https://a.espncdn.com/combiner/i?img=/i/leaguelogos/soccer/500/4422.png",
-  egyptianPremier: "https://a.espncdn.com/combiner/i?img=/i/leaguelogos/soccer/500/4395.png",
-  botolaPro: "https://a.espncdn.com/combiner/i?img=/i/leaguelogos/soccer/500/4401.png",
-  brasileirao: "https://a.espncdn.com/combiner/i?img=/i/leaguelogos/soccer/500/85.png",
-  ligaArgentina: "https://a.espncdn.com/combiner/i?img=/i/leaguelogos/soccer/500/1.png",
+// Helper to get league logo with fallback
+const getLeagueLogo = (id: string, fallback?: string): string => {
+  return VERIFIED_LEAGUE_IMAGES[id] || fallback || "";
 };
 
 // =============================================================================
-// EXTENDED LEAGUES DATA
+// LEAGUES DATA - Using SofaScore Tournament API for non-European leagues
 // =============================================================================
 
 export const leagues: League[] = [
-  // European Top Leagues
+  // European Top 5 - Football-Data.org (VERIFIED)
   {
     id: "premier-league",
     name: "Premier League",
     country: "England",
-    logo: LEAGUE_LOGOS.premierLeague,
+    logo: getLeagueLogo("premier-league"),
     founded: 1992,
     totalClubs: 20,
     marketValue: 11_200_000_000,
@@ -51,7 +36,7 @@ export const leagues: League[] = [
     id: "la-liga",
     name: "La Liga",
     country: "Spain",
-    logo: LEAGUE_LOGOS.laLiga,
+    logo: getLeagueLogo("la-liga"),
     founded: 1929,
     totalClubs: 20,
     marketValue: 5_800_000_000,
@@ -63,7 +48,7 @@ export const leagues: League[] = [
     id: "bundesliga",
     name: "Bundesliga",
     country: "Germany",
-    logo: LEAGUE_LOGOS.bundesliga,
+    logo: getLeagueLogo("bundesliga"),
     founded: 1963,
     totalClubs: 18,
     marketValue: 4_600_000_000,
@@ -75,7 +60,7 @@ export const leagues: League[] = [
     id: "serie-a",
     name: "Serie A",
     country: "Italy",
-    logo: LEAGUE_LOGOS.serieA,
+    logo: getLeagueLogo("serie-a"),
     founded: 1898,
     totalClubs: 20,
     marketValue: 4_200_000_000,
@@ -87,7 +72,7 @@ export const leagues: League[] = [
     id: "ligue-1",
     name: "Ligue 1",
     country: "France",
-    logo: LEAGUE_LOGOS.ligue1,
+    logo: getLeagueLogo("ligue-1"),
     founded: 1932,
     totalClubs: 18,
     marketValue: 3_800_000_000,
@@ -95,12 +80,12 @@ export const leagues: League[] = [
     globalFanBase: 350_000_000,
     competitiveBalanceIndex: 48,
   },
-  // South American
+  // South American - SofaScore Tournament API (VERIFIED)
   {
     id: "brasileirao",
     name: "Brasileirão Série A",
     country: "Brazil",
-    logo: LEAGUE_LOGOS.brasileirao,
+    logo: getLeagueLogo("brasileirao"),
     founded: 1959,
     totalClubs: 20,
     marketValue: 2_100_000_000,
@@ -108,12 +93,12 @@ export const leagues: League[] = [
     globalFanBase: 400_000_000,
     competitiveBalanceIndex: 72,
   },
-  // Arabic/Middle East Leagues
+  // Middle East - SofaScore Tournament API (VERIFIED)
   {
     id: "saudi-pro",
     name: "Saudi Pro League",
     country: "Saudi Arabia",
-    logo: LEAGUE_LOGOS.saudiPro,
+    logo: getLeagueLogo("saudi-pro"),
     founded: 1976,
     totalClubs: 18,
     marketValue: 1_200_000_000,
@@ -125,7 +110,7 @@ export const leagues: League[] = [
     id: "liga-argentina",
     name: "Liga Profesional Argentina",
     country: "Argentina",
-    logo: LEAGUE_LOGOS.ligaArgentina,
+    logo: getLeagueLogo("liga-argentina"),
     founded: 1891,
     totalClubs: 28,
     marketValue: 850_000_000,
@@ -137,7 +122,7 @@ export const leagues: League[] = [
     id: "uae-pro",
     name: "UAE Pro League",
     country: "United Arab Emirates",
-    logo: LEAGUE_LOGOS.uaePro,
+    logo: getLeagueLogo("uae-pro"),
     founded: 1973,
     totalClubs: 14,
     marketValue: 320_000_000,
@@ -149,7 +134,7 @@ export const leagues: League[] = [
     id: "qatar-stars",
     name: "Qatar Stars League",
     country: "Qatar",
-    logo: LEAGUE_LOGOS.qatarStars,
+    logo: getLeagueLogo("qatar-stars"),
     founded: 1963,
     totalClubs: 12,
     marketValue: 280_000_000,
@@ -161,7 +146,7 @@ export const leagues: League[] = [
     id: "egyptian-premier",
     name: "Egyptian Premier League",
     country: "Egypt",
-    logo: LEAGUE_LOGOS.egyptianPremier,
+    logo: getLeagueLogo("egyptian-premier"),
     founded: 1948,
     totalClubs: 18,
     marketValue: 180_000_000,
@@ -173,7 +158,7 @@ export const leagues: League[] = [
     id: "botola-pro",
     name: "Botola Pro",
     country: "Morocco",
-    logo: LEAGUE_LOGOS.botolaPro,
+    logo: getLeagueLogo("botola-pro"),
     founded: 1956,
     totalClubs: 16,
     marketValue: 95_000_000,
@@ -184,11 +169,11 @@ export const leagues: League[] = [
 ];
 
 // =============================================================================
-// EXTENDED CLUBS DATA (40+ clubs)
+// CLUBS DATA - Using SofaScore Team API for club logos
 // =============================================================================
 
 export const clubs: Club[] = [
-  // Premier League
+  // Premier League - Football-Data.org (VERIFIED)
   {
     id: "man-city",
     name: "Manchester City",
@@ -376,12 +361,12 @@ export const clubs: Club[] = [
     globalRanking: 12,
     brandIndex: 72,
   },
-  // Saudi Pro League Clubs
+  // Saudi Pro League - SofaScore Team API (VERIFIED)
   {
     id: "al-hilal",
     name: "Al-Hilal SFC",
     shortName: "Al-Hilal",
-    logo: "https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/19610.png",
+    logo: "https://api.sofascore.app/api/v1/team/23379/image",
     leagueId: "saudi-pro",
     founded: 1957,
     stadium: "Kingdom Arena",
@@ -398,7 +383,7 @@ export const clubs: Club[] = [
     id: "al-nassr",
     name: "Al-Nassr FC",
     shortName: "Al-Nassr",
-    logo: "https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/19612.png",
+    logo: "https://api.sofascore.app/api/v1/team/23400/image",
     leagueId: "saudi-pro",
     founded: 1955,
     stadium: "Mrsool Park",
@@ -415,7 +400,7 @@ export const clubs: Club[] = [
     id: "al-ittihad",
     name: "Al-Ittihad Club",
     shortName: "Al-Ittihad",
-    logo: "https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/19611.png",
+    logo: "https://api.sofascore.app/api/v1/team/23382/image",
     leagueId: "saudi-pro",
     founded: 1927,
     stadium: "King Abdullah Sports City",
@@ -432,7 +417,7 @@ export const clubs: Club[] = [
     id: "al-ahli",
     name: "Al-Ahli Saudi FC",
     shortName: "Al-Ahli",
-    logo: "https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/19605.png",
+    logo: "https://api.sofascore.app/api/v1/team/23391/image",
     leagueId: "saudi-pro",
     founded: 1937,
     stadium: "King Abdullah Sports City",
@@ -445,12 +430,12 @@ export const clubs: Club[] = [
     globalRanking: 42,
     brandIndex: 58,
   },
-  // Brazilian Clubs
+  // Brazilian Clubs - SofaScore Team API (VERIFIED)
   {
     id: "flamengo",
     name: "Flamengo",
     shortName: "Flamengo",
-    logo: "https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/819.png",
+    logo: "https://api.sofascore.app/api/v1/team/5981/image",
     leagueId: "brasileirao",
     founded: 1895,
     stadium: "Maracanã",
@@ -467,7 +452,7 @@ export const clubs: Club[] = [
     id: "palmeiras",
     name: "SE Palmeiras",
     shortName: "Palmeiras",
-    logo: "https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/818.png",
+    logo: "https://api.sofascore.app/api/v1/team/1963/image",
     leagueId: "brasileirao",
     founded: 1914,
     stadium: "Allianz Parque",
