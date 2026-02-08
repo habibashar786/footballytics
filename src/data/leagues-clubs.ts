@@ -137,7 +137,7 @@ export const leagues: League[] = [
     id: "egyptian-premier",
     name: "Egyptian Premier League",
     country: "Egypt",
-    logo: "https://media.api-sports.io/football/leagues/233.png",
+    logo: "https://www.thesportsdb.com/images/media/league/badge/dw12w31687711117.png",
     founded: 1948,
     totalClubs: 18,
     marketValue: 180_000_000,
