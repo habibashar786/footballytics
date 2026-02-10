@@ -2,22 +2,19 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
+import {
   Sparkles,
   Send,
   Bot,
   User,
   Loader2,
-  TrendingUp,
-  Users,
-  DollarSign,
   BarChart3,
   Lightbulb,
   Database,
   Cpu,
   CheckCircle,
   Clock,
-  RefreshCw
+  AlertCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -36,75 +33,6 @@ interface AgentStatus {
   output?: string;
 }
 
-// Simulated AI responses
-const sampleResponses: Record<string, { agents: AgentStatus[], response: string }> = {
-  "market": {
-    agents: [
-      { name: "Data Agent", status: "complete", duration: 120, output: "Retrieved 2,458 player records" },
-      { name: "Analytics Agent", status: "complete", duration: 340, output: "Calculated market valuations" },
-      { name: "Insights Agent", status: "complete", duration: 180, output: "Generated market analysis" },
-    ],
-    response: `## Market Value Analysis
-
-Based on my analysis of the current football market:
-
-**Key Findings:**
-- Total market value across top 5 leagues: **€31.5B** (+11.7% YoY)
-- Average player value: **€12.8M** (up from €11.5M)
-- Premier League leads with **€11.2B** total value
-
-**Top Value Increases:**
-1. Jude Bellingham (+€50M after Real Madrid move)
-2. Bukayo Saka (+€30M after consistent performances)
-3. Florian Wirtz (+€40M emerging talent premium)
-
-**Investment Recommendation:** Focus on young midfielders (21-24 age bracket) from top academies - they show the highest value appreciation potential.`
-  },
-  "player": {
-    agents: [
-      { name: "Data Agent", status: "complete", duration: 95, output: "Loaded player statistics" },
-      { name: "Analytics Agent", status: "complete", duration: 280, output: "Performance analysis complete" },
-      { name: "Ranking Agent", status: "complete", duration: 150, output: "Rankings generated" },
-    ],
-    response: `## Top Player Recommendations
-
-Based on performance metrics and market trends:
-
-**Best Value Players (Performance/Price Ratio):**
-1. **Florian Wirtz** - €130M value, elite creative output
-2. **Jamal Musiala** - €120M, versatile attacking threat
-3. **Bukayo Saka** - €140M, consistent Premier League performer
-
-**Undervalued Talents:**
-- Khvicha Kvaratskhelia (Napoli) - Should be valued €20M higher
-- Moisés Caicedo (Chelsea) - Elite defensive metrics
-
-**Risk Assessment:** High-value transfers (>€100M) have 40% chance of underperforming relative to fee.`
-  },
-  "default": {
-    agents: [
-      { name: "Data Agent", status: "complete", duration: 100, output: "Data retrieved" },
-      { name: "Analytics Agent", status: "complete", duration: 200, output: "Analysis complete" },
-      { name: "Insights Agent", status: "complete", duration: 150, output: "Insights generated" },
-    ],
-    response: `I've analyzed your query across our football intelligence database.
-
-**Key Insights:**
-- Our system tracks 2,458 players across 6 major leagues
-- Real-time valuations updated every 24 hours
-- AI-powered predictions based on 50+ performance metrics
-
-**Available Analysis:**
-- Market value trends and predictions
-- Player performance comparisons
-- Transfer recommendation engine
-- Fan engagement analytics
-- Investment risk assessment
-
-What specific aspect would you like me to dive deeper into?`
-  }
-};
-
 // Sample queries
 const sampleQueries = [
   "What are the current market trends?",
@@ -119,7 +47,7 @@ export default function InsightsPage() {
     {
       id: "welcome",
       role: "assistant",
-      content: "👋 Welcome to **Footballytics AI**! I'm your intelligent football analytics assistant powered by our multi-agent system.\n\nI can help you with:\n- 📊 Market analysis & valuations\n- ⚽ Player performance insights\n- 💰 Investment recommendations\n- 👥 Fan engagement analytics\n\nWhat would you like to explore today?",
+      content: "Welcome to **Footballytics AI**! I'm your intelligent football analytics assistant powered by our multi-agent system.\n\nI can help you with:\n- Market analysis & valuations\n- Player performance insights\n- Investment recommendations\n- Fan engagement analytics\n\nWhat would you like to explore today?",
       timestamp: new Date(),
     }
   ]);
@@ -136,27 +64,6 @@ export default function InsightsPage() {
     scrollToBottom();
   }, [messages]);
 
-  const simulateAgentExecution = async (agents: AgentStatus[]) => {
-    for (let i = 0; i < agents.length; i++) {
-      // Set agent to running
-      setCurrentAgents(prev => 
-        prev.map((a, idx) => 
-          idx === i ? { ...a, status: "running" } : a
-        )
-      );
-
-      // Simulate processing time
-      await new Promise(resolve => setTimeout(resolve, agents[i].duration || 200));
-
-      // Set agent to complete
-      setCurrentAgents(prev => 
-        prev.map((a, idx) => 
-          idx === i ? { ...a, status: "complete" } : a
-        )
-      );
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isProcessing) return;
@@ -169,38 +76,82 @@ export default function InsightsPage() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const query = input;
     setInput("");
     setIsProcessing(true);
 
-    // Determine response type
-    const lowerInput = input.toLowerCase();
-    let responseData = sampleResponses.default;
-    
-    if (lowerInput.includes("market") || lowerInput.includes("value") || lowerInput.includes("trend")) {
-      responseData = sampleResponses.market;
-    } else if (lowerInput.includes("player") || lowerInput.includes("invest") || lowerInput.includes("recommend")) {
-      responseData = sampleResponses.player;
-    }
-
-    // Initialize agents
-    const agents = responseData.agents.map(a => ({ ...a, status: "pending" as const }));
+    // Show agents as running
+    const agents: AgentStatus[] = [
+      { name: "Data Agent", status: "pending" },
+      { name: "Analytics Agent", status: "pending" },
+      { name: "Insights Agent", status: "pending" },
+    ];
     setCurrentAgents(agents);
 
-    // Simulate agent execution
-    await simulateAgentExecution(responseData.agents);
+    // Animate: Data Agent running
+    setCurrentAgents(prev => prev.map((a, i) => i === 0 ? { ...a, status: "running" } : a));
 
-    // Add assistant response
-    const assistantMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      role: "assistant",
-      content: responseData.response,
-      timestamp: new Date(),
-      agents: responseData.agents,
-    };
+    try {
+      const res = await fetch("/api/insights", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+      });
 
-    setMessages(prev => [...prev, assistantMessage]);
+      const data = await res.json();
+
+      if (!res.ok) {
+        // Mark all agents as error
+        setCurrentAgents(prev => prev.map(a => ({ ...a, status: "error" as const })));
+
+        const errorMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: data.error || "Something went wrong. Please try again.",
+          timestamp: new Date(),
+        };
+        setMessages(prev => [...prev, errorMessage]);
+        setIsProcessing(false);
+        return;
+      }
+
+      // Map API agent results to our status format
+      const completedAgents: AgentStatus[] = (data.agents || []).map((a: { agent: string; status: string; duration: number; cached: boolean }) => ({
+        name: a.agent,
+        status: "complete" as const,
+        duration: a.duration,
+        output: a.cached ? "Cached" : `${a.duration}ms`,
+      }));
+
+      // Show transitions: mark Data + Analytics complete, Insights running, then all complete
+      setCurrentAgents([
+        { name: "Data Agent", status: "complete", duration: completedAgents.find((a: AgentStatus) => a.name === "Data Agent")?.duration, output: "Data retrieved" },
+        { name: "Analytics Agent", status: "complete", duration: completedAgents.find((a: AgentStatus) => a.name === "Analytics Agent")?.duration, output: "Analysis complete" },
+        { name: "Insights Agent", status: "complete", duration: completedAgents.find((a: AgentStatus) => a.name === "Insights Agent")?.duration, output: "Insights generated" },
+      ]);
+
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: data.response,
+        timestamp: new Date(),
+        agents: completedAgents,
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch {
+      setCurrentAgents(prev => prev.map(a => ({ ...a, status: "error" as const })));
+
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: "Failed to connect to the AI service. Please check your connection and try again.",
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    }
+
     setIsProcessing(false);
-    setCurrentAgents([]);
   };
 
   return (
@@ -246,8 +197,8 @@ export default function InsightsPage() {
                   {/* Avatar */}
                   <div className={cn(
                     "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
-                    message.role === "user" 
-                      ? "bg-gold-500/20 text-gold-400" 
+                    message.role === "user"
+                      ? "bg-gold-500/20 text-gold-400"
                       : "bg-purple-500/20 text-purple-400"
                   )}>
                     {message.role === "user" ? (
@@ -268,9 +219,9 @@ export default function InsightsPage() {
                         ? "bg-gold-500/20 text-white"
                         : "bg-white/5"
                     )}>
-                      <div 
+                      <div
                         className="prose prose-invert prose-sm max-w-none"
-                        dangerouslySetInnerHTML={{ 
+                        dangerouslySetInnerHTML={{
                           __html: message.content
                             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                             .replace(/## (.*?)$/gm, '<h3 class="text-lg font-semibold text-gold-400 mt-4 mb-2">$1</h3>')
@@ -372,6 +323,7 @@ export default function InsightsPage() {
                     status === "running" && "bg-blue-500/10 border-blue-500/30",
                     status === "complete" && "bg-pitch-500/10 border-pitch-500/30",
                     status === "pending" && "bg-yellow-500/10 border-yellow-500/30",
+                    status === "error" && "bg-red-500/10 border-red-500/30",
                     status === "idle" && "bg-white/5 border-white/10"
                   )}
                 >
@@ -393,6 +345,9 @@ export default function InsightsPage() {
                     )}
                     {status === "pending" && (
                       <Clock className="h-4 w-4 text-yellow-400" />
+                    )}
+                    {status === "error" && (
+                      <AlertCircle className="h-4 w-4 text-red-400" />
                     )}
                   </div>
                   <p className="text-xs text-muted-foreground">{agent.description}</p>
