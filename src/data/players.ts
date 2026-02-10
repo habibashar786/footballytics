@@ -160,7 +160,7 @@ export const players: Player[] = [
     id: "yamal",
     name: "Lamine Yamal",
     shortName: "Yamal",
-    photo: "https://img.a.transfermarkt.technology/portrait/big/935017-1723655462.jpg",
+    photo: "https://b.fssta.com/uploads/application/soccer/headshots/885083.vresize.350.350.medium.19.png",
     nationality: "Spain",
     nationalityFlag: "🇪🇸",
     position: "Right Winger",

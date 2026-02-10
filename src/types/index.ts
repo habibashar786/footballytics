@@ -270,9 +270,65 @@ export interface User {
   email: string;
   name: string;
   avatar?: string;
-  role: "free" | "pro" | "enterprise" | "admin";
+  role: UserRole;
+  subscription: SubscriptionTier;
+  subscriptionStatus: SubscriptionStatus;
+  subscriptionExpiry?: Date;
+  stripeCustomerId?: string;
   createdAt: Date;
+  lastLoginAt?: Date;
   preferences: UserPreferences;
+}
+
+export type UserRole = "user" | "admin" | "super_admin";
+export type SubscriptionTier = "free" | "starter" | "pro" | "enterprise";
+export type SubscriptionStatus = "active" | "trialing" | "past_due" | "canceled" | "expired";
+
+export interface Subscription {
+  id: string;
+  tier: SubscriptionTier;
+  name: string;
+  price: number;
+  priceYearly: number;
+  currency: string;
+  features: SubscriptionFeature[];
+  limits: SubscriptionLimits;
+  popular?: boolean;
+}
+
+export interface SubscriptionFeature {
+  id: string;
+  name: string;
+  description: string;
+  included: boolean;
+}
+
+export interface SubscriptionLimits {
+  playersView: number | "unlimited";
+  clubsView: number | "unlimited";
+  leaguesView: number | "unlimited";
+  reportsPerMonth: number | "unlimited";
+  apiCallsPerDay: number | "unlimited";
+  historicalDataYears: number;
+  exportFormats: string[];
+  aiInsightsPerDay: number | "unlimited";
+  customDashboards: number | "unlimited";
+  teamMembers: number | "unlimited";
+}
+
+export interface AccessControl {
+  canViewPlayers: boolean;
+  canViewClubs: boolean;
+  canViewLeagues: boolean;
+  canViewAnalytics: boolean;
+  canViewInvestors: boolean;
+  canViewReports: boolean;
+  canExportData: boolean;
+  canUseAI: boolean;
+  canAccessAPI: boolean;
+  canManageUsers: boolean;
+  canManageSettings: boolean;
+  canViewAdminPanel: boolean;
 }
 
 export interface UserPreferences {
