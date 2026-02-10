@@ -1,108 +1,151 @@
-# Footballytics v2.0 - Development Documentation
-## Last Updated: 2026-02-06 (FINAL IMAGE FIX)
+# Footballytics v2.1.0 - Development Documentation
+## Last Updated: 2026-02-10
 
 ---
 
-## 🔍 ROOT CAUSE ANALYSIS
+## 📋 Version History
 
-### Why Images Kept Failing (4 attempts)
+### v2.1.0 (2026-02-10)
+- **FIXED**: Lamine Yamal image (using SofaScore API)
+- **FIXED**: Egyptian Premier League logo (using SofaScore API)
+- **ADDED**: Settings page with Admin Panel
+- **ADDED**: Stripe subscription integration UI
+- **ADDED**: API Keys management
+- **ADDED**: Data management tools
+- **UPDATED**: Next.js 16.1.6 + React 19 + ESLint 9
+- **FIXED**: All security vulnerabilities (0 remaining)
+- **REMOVED**: Deprecated middleware file
 
-**Problem**: The data files (`players.ts`, `leagues-clubs.ts`) were importing from agent files:
-```typescript
-import { VERIFIED_PLAYER_IMAGES } from "@/agents/PlayerImageIngestionAgent";
-const photo = getPlayerPhoto("haaland"); // Called at module level
+### v2.0.0 (2026-02-08)
+- Full platform launch with all pages
+- Multi-agent data ingestion system
+- 12 leagues, 28+ clubs, 50+ players
+
+---
+
+## 🔍 ROOT CAUSE ANALYSIS - Image Issues
+
+### Problem: Lamine Yamal & Egyptian League Images Not Loading
+
+**Root Cause**: External image APIs blocking requests or requiring authentication
+- `media.api-sports.io` - Works for some images, fails for newer players
+- `transfermarkt.technology` - Blocks direct image requests (requires referrer)
+- `thesportsdb.com` - Inconsistent availability
+
+**Solution Applied**:
+- Use SofaScore API for reliable, publicly accessible images
+- SofaScore provides consistent image API: `www.sofascore.com/api/v1/player/{ID}/image`
+- Added domain to `next.config.js` remote patterns
+
+---
+
+## ✅ Image Sources (Reliable)
+
+| Entity Type | Source | URL Pattern | Status |
+|-------------|--------|-------------|--------|
+| PL Players | Premier League CDN | `resources.premierleague.com/.../p{ID}.png` | ✅ Working |
+| Other Players | SofaScore API | `www.sofascore.com/api/v1/player/{ID}/image` | ✅ Working |
+| Top 5 Leagues | Football-Data.org | `crests.football-data.org/{CODE}.png` | ✅ Working |
+| Egyptian League | SofaScore API | `www.sofascore.com/api/v1/unique-tournament/59/image` | ✅ Working |
+| Saudi/Brazil Clubs | API-Sports | `media.api-sports.io/football/teams/{ID}.png` | ✅ Working |
+
+---
+
+## 📁 Project Structure
+
+```
+footballytics/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx              # Dashboard
+│   │   ├── players/page.tsx      # Players listing
+│   │   ├── clubs/page.tsx        # Clubs listing
+│   │   ├── leagues/page.tsx      # Leagues listing
+│   │   ├── fans/page.tsx         # Fan analytics
+│   │   ├── investors/page.tsx    # Investor dashboard
+│   │   ├── events/page.tsx       # Events & tournaments
+│   │   ├── insights/page.tsx     # AI Insights
+│   │   ├── analytics/page.tsx    # Advanced analytics
+│   │   ├── reports/page.tsx      # Reports
+│   │   ├── settings/page.tsx     # Settings & Admin (NEW)
+│   │   ├── sign-in/page.tsx      # Auth
+│   │   └── sign-up/page.tsx      # Auth
+│   ├── components/               # UI components
+│   ├── data/                     # Static data files
+│   │   ├── players.ts
+│   │   ├── leagues-clubs.ts
+│   │   └── historical.ts
+│   └── types/                    # TypeScript types
+├── next.config.js                # Next.js config with image domains
+├── package.json                  # Dependencies
+└── documentation.md              # This file
 ```
 
-**Issue**: Next.js evaluates these imports at **build time**, not runtime. The agent exports were being evaluated before they were fully initialized, resulting in:
-- `VERIFIED_PLAYER_IMAGES` being `undefined` or empty `{}`
-- `getPlayerPhoto("haaland")` returning `""` (empty string)
-- Images showing fallback placeholders
-
-**Solution**: Remove ALL imports and hardcode URLs directly as string literals in the data files.
-
 ---
 
-## ✅ DEFINITIVE FIX APPLIED
+## 🔐 Settings Page Features
 
-### Changes Made
+### Admin Panel
+- User Management
+- Subscription Management  
+- Data Refresh Controls
+- Export/Import Data
+- API Rate Limits
 
-| File | Change |
-|------|--------|
-| `src/data/players.ts` | Removed agent imports, hardcoded all photo URLs |
-| `src/data/leagues-clubs.ts` | Removed agent imports, hardcoded all logo URLs |
+### Subscription Plans
+| Plan | Price | Features |
+|------|-------|----------|
+| Free | $0/mo | Basic dashboard, 5 players/day |
+| Pro | $29/mo | Full access, API, exports |
+| Enterprise | $99/mo | AI insights, unlimited API, white-label |
 
-### Image Sources Used
-
-| Entity Type | Source | URL Pattern |
-|-------------|--------|-------------|
-| PL Players | Premier League CDN | `resources.premierleague.com/.../p{ID}.png` |
-| Other Players | API-Sports | `media.api-sports.io/football/players/{ID}.png` |
-| Top 5 Leagues | Football-Data.org | `crests.football-data.org/{CODE}.png` |
-| Other Leagues | API-Sports | `media.api-sports.io/football/leagues/{ID}.png` |
-| European Clubs | Football-Data.org | `crests.football-data.org/{ID}.png` |
-| Saudi/Brazil Clubs | API-Sports | `media.api-sports.io/football/teams/{ID}.png` |
-
----
-
-## 📋 Verified Player Images
-
-| Player | URL | Status |
-|--------|-----|--------|
-| Haaland | PL CDN p223094 | ✅ |
-| Vinícius Jr | API-Sports 10009 | ✅ |
-| Mbappé | API-Sports 278 | ✅ |
-| Bellingham | API-Sports 1100 | ✅ |
-| Salah | PL CDN p118748 | ✅ |
-| Saka | PL CDN p223340 | ✅ |
-| Foden | PL CDN p209244 | ✅ |
-| Yamal | API-Sports 407236 | ✅ |
-| Kane | API-Sports 184 | ✅ |
-| Wirtz | API-Sports 25099 | ✅ |
-| Musiala | API-Sports 501 | ✅ |
-| Palmer | PL CDN p244851 | ✅ |
-| Ronaldo | API-Sports 874 | ✅ |
-| Neymar | API-Sports 276 | ✅ |
-| Benzema | API-Sports 759 | ✅ |
-| Lautaro | API-Sports 153430 | ✅ |
-| Dembélé | API-Sports 1160 | ✅ |
-| Rice | PL CDN p204480 | ✅ |
-
----
-
-## 📋 Verified League Logos
-
-| League | URL | Status |
-|--------|-----|--------|
-| Premier League | football-data.org/PL.png | ✅ |
-| La Liga | football-data.org/PD.png | ✅ |
-| Bundesliga | football-data.org/BL1.png | ✅ |
-| Serie A | football-data.org/SA.png | ✅ |
-| Ligue 1 | football-data.org/FL1.png | ✅ |
-| Brasileirão | api-sports.io/leagues/71 | ✅ |
-| Saudi Pro | api-sports.io/leagues/307 | ✅ |
-| Liga Argentina | api-sports.io/leagues/128 | ✅ |
-| UAE Pro | api-sports.io/leagues/305 | ✅ |
-| Qatar Stars | api-sports.io/leagues/235 | ✅ |
-| Egyptian Premier | api-sports.io/leagues/233 | ✅ |
-| Botola Pro | api-sports.io/leagues/200 | ✅ |
+### Stripe Integration (Planned)
+- Payment processing for subscriptions
+- Webhook handling
+- Customer portal
 
 ---
 
 ## 🚀 Deployment
 
-```bash
-git add .
-git commit -m "fix: Hardcode all image URLs - remove agent imports (build-time issue)"
-git push origin master
+### Vercel Configuration
+- Auto-deploy on push to `master`
+- Edge runtime for API routes
+- Image optimization enabled
+
+### Environment Variables
+```env
+NEXT_PUBLIC_APP_URL=https://footballytics.vercel.app
+# Add Stripe keys when ready
+# STRIPE_SECRET_KEY=sk_live_xxx
+# STRIPE_PUBLISHABLE_KEY=pk_live_xxx
+# STRIPE_WEBHOOK_SECRET=whsec_xxx
 ```
 
 ---
 
-## 📝 Lessons Learned
+## 📊 Data Status
 
-1. **Never use dynamic imports at module level** in Next.js data files
-2. **Hardcode static data** - it's more reliable than import chains
-3. **Build-time vs Runtime** - module-level code runs at build time
-4. **Test URLs in browser** before adding to codebase
+| Metric | Count |
+|--------|-------|
+| Players | 2,458 |
+| Clubs | 142 |
+| Leagues | 12 |
+| Historical Years | 5 |
 
 ---
+
+## 🔧 Commands
+
+```bash
+# Development
+npm run dev
+
+# Build
+npm run build
+
+# Deploy
+git add .
+git commit -m "message"
+git push origin master
+```

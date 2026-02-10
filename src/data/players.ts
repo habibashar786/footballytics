@@ -160,7 +160,7 @@ export const players: Player[] = [
     id: "yamal",
     name: "Lamine Yamal",
     shortName: "Yamal",
-    photo: "https://b.fssta.com/uploads/application/soccer/headshots/885083.vresize.350.350.medium.19.png",
+    photo: "https://www.sofascore.com/api/v1/player/1402912/image",
     nationality: "Spain",
     nationalityFlag: "🇪🇸",
     position: "Right Winger",

@@ -28,6 +28,10 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'www.sofascore.com',
+      },
+      {
+        protocol: 'https',
         hostname: 'b.fssta.com',
       },
     ],
