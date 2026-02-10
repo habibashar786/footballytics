@@ -22,6 +22,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'www.thesportsdb.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.a.transfermarkt.technology',
+      },
     ],
   },
   typescript: {
